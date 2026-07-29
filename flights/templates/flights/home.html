@@ -1,0 +1,296 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+     <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftJet</title>
+
+  <link rel="stylesheet" href="{% static 'flights/css/bootstrap.min.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+  <style>
+    .body {
+      font-family: 'Poppins', sans-serif;
+      }
+
+    .carousel-item img {
+    width: 100%;
+    height: 70vh;
+    object-fit: cover;
+      }
+
+
+
+    @media (max-width: 767.98px) {
+    .custom-navbar {
+        border-radius: 0 !important;
+    }
+}
+
+
+  </style>
+
+</head>
+
+<body>
+   <div class="position-relative">
+    <!--hero-->
+    <div class="hero position-relative mt-0">
+
+    <!-- Floating Navbar -->
+    <nav class="custom-navbar navbar navbar-expand-md navbar-light bg-light shadow-sm rounded-pill position-absolute top-0 start-50 translate-middle-x w-75 mt-3 z-3 ">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4" href="#">
+                <img src="{% static 'flights/images/logo.png' %}" alt="SwiftJet Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+                <span class="text-success">Swift</span><span class="text-danger">Jet</span>
+            </a>
+
+            <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+
+              <span class="navbar-toggler-icon"></span> 
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto gap-4">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Book</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Flights</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <button class="btn btn-outline-danger rounded-pill">
+                            Sign Up
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Carousel -->
+    <div id="carouselExampleControls"
+        class="carousel slide"
+        data-bs-ride="carousel">
+
+        <div class="carousel-inner">
+
+            <div class="carousel-item active">
+                <img src="{% static 'flights/images/ChatGPT Image Jul 29, 2026, 11_16_54 AM.png' %}" class="d-block w-100" alt="Clouds">
+            </div>
+
+            <div class="carousel-item">
+                <img src="{% static 'flights/images/ChatGPT Image Jul 29, 2026, 11_20_17 AM.png ' %}" class="d-block w-100" alt="Dubai">
+            </div>
+
+            <div class="carousel-item">
+                <img src="{% static 'flights/images/ChatGPT Image Jul 29, 2026, 11_25_04 AM.png' %}" class="d-block w-100" alt="Plane">
+            </div>
+
+        </div>
+
+        <button class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide="prev">
+
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+
+        <button class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide="next">
+
+            <span class="carousel-control-next-icon"></span>
+        </button>
+
+    </div>
+
+    </div>
+
+    <!--Flight search-->
+    <div class="position-absolute top-100 start-50 translate-middle w-100" >
+    <div class=" container bg-white mb-5">
+
+
+    <div class="row  shadow-lg">
+
+        <div class="col-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <button class="nav-link active"
+                        data-bs-toggle="tab"
+                        data-bs-target="#flights">
+                    Flights
+                </button>
+            </li>
+
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#status">
+                    Status
+                </button>
+            </li>
+        </ul>  
+        </div>
+
+        <div class="tab-content">
+        <!--Flights form-->
+        <div class="tab-pane fade show active" id="flights">
+
+        <form method="GET" class="row g-3 align-items-end">
+
+        <div class="col-md-4 py-3">
+            <label class="form-label">From</label>
+            {{ form.departure_destination }}
+        </div>
+
+        <div class="col-md-4 py-3">
+            <label class="form-label">To</label>
+            {{ form.arrival_destination }}
+        </div>
+
+        <div class="col-md-3 py-3">
+            <label class="form-label">Departure Date</label>
+            {{ form.departure_time }}
+        </div>
+
+        <div class="col-md-1 py-3">
+            <button type="submit" class="btn btn-danger w-100">
+                Search
+            </button>
+        </div>
+
+    </form>
+    </div>
+    <!--Status-->
+        <div class="tab-pane fade" id ="status">
+            <p>Fetching Status ...</p>
+        </div>
+    </div>
+    </div>
+
+    {% if request.GET %}
+
+    <h1 class="display-2 text-center my-5">Available Flights</h1>
+
+    {% for flight in flights %}
+
+
+    <div class="row">
+    <div class="col-lg-12 d-flex justify-content-center"">
+    <div class="card mb-3" style="width: 18rem;">
+        {% if flight.arrival_destination.image %}
+        <img src="{{ flight.arrival_destination.image.url }}"
+            class="card-img-top"
+            alt="{{ flight.arrival_destination.name }}">
+    {% endif %}
+        
+    <div class="card-body">
+        <h5 class="card-title">{{ flight.flight_number }}</h5>
+        <p class="card-text">{{ flight.departure_destination }} to {{ flight.arrival_destination }} <br> Departure: {{ flight.departure_time }} , Arrival: {{ flight.arrival_time }} </p>
+        <a href="#" class="btn btn-primary">Book Flight</a>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+    {% empty %}
+
+    <p class="text-center">No flights available</p>
+
+    {% endfor %}
+
+    {% endif %}
+    </div>
+    </div>
+   </div>
+   
+
+
+
+   
+    <!--FEATURE LIST-->
+    <div class="container py-5 my-5">
+        <div class="row">
+
+            <div class="col-md-3 py-3 border-end border-1 border-danger">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-shield-check fs-2 text-success"></i>
+
+                    <div>
+                        <h6 class="fw-bold mb-1">Safe & Reliable</h6>
+                        <small class="text-muted">
+                            Your safety is our top priority.
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 py-3 border-end border-1 border-danger">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-suitcase fs-1 text-success"></i>
+
+                    <div>
+                        <h6 class="fw-bold mb-1">Generous baggage</h6>
+                        <small class="text-muted">
+                            Enjoy generous baggage allowances for a hassle-free travel experience.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 py-3 border-end border-1 border-danger">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-fork-knife fs-1 text-success"></i>
+
+                    <div>
+                        <h6 class="fw-bold mb-1">Delicious meals</h6>
+                        <small class="text-muted">
+                            Enjoy delicious and diverse dining options during your flight.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 py-3">
+                <div class="d-flex align-items-start gap-3">
+                    <i class="bi bi-airplane fs-1 text-success"></i>
+
+                    <div>
+                        <h6 class="fw-bold mb-1">Comfort First</h6>
+                        <small class="text-muted">
+                            Your comfort is our priority.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+  
+
+
+
+
+        </div>
+    </div>
+
+
+<script src="{% static 'flights/js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+</html>
