@@ -23,11 +23,18 @@
     object-fit: cover;
       }
 
-
-
     @media (max-width: 767.98px) {
     .custom-navbar {
         border-radius: 0 !important;
+    }
+}   
+
+    @media (min-width: 978px) {
+    .floating-form {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 }
 
@@ -80,6 +87,16 @@
         </div>
     </nav>
 
+    <div class="position-absolute  top-50 start-0 text-white z-3">
+        <p>FLY SMART, FLY SWIFT</p>
+        <P>Your Journey, Our Priority.</P>
+        <p>Experience comfort, reliabilty and world class service with SwiftJet</p>
+      
+    </div>
+
+    
+  
+
     <!-- Carousel -->
     <div id="carouselExampleControls"
         class="carousel slide"
@@ -122,8 +139,8 @@
     </div>
 
     <!--Flight search-->
-    <div class="position-absolute top-100 start-50 translate-middle w-100" >
-    <div class=" container bg-white mb-5">
+    <div class="floating-form w-100 " >
+    <div class=" container bg-white my-5">
 
 
     <div class="row  shadow-lg">
@@ -170,8 +187,8 @@
         </div>
 
         <div class="col-md-1 py-3">
-            <button type="submit" class="btn btn-danger w-100">
-                Search
+            <button type="submit" class="btn btn-danger w-100 ">
+                <i class="bi bi-search"></i>
             </button>
         </div>
 
