@@ -219,8 +219,9 @@
         
     <div class="card-body">
         <h5 class="card-title">{{ flight.flight_number }}</h5>
-        <p class="card-text">{{ flight.departure_destination }} to {{ flight.arrival_destination }} <br> Departure: {{ flight.departure_time }} , Arrival: {{ flight.arrival_time }} </p>
-        <a href="#" class="btn btn-primary">Book Flight</a>
+        <p class="card-text">{{ flight.departure_destination }} to {{ flight.arrival_destination }} <br> Departure: {{ flight.departure_time }} , Arrival: {{ flight.arrival_time }} {{flight.available_seats}} </p>
+        
+        <a href="{% url 'book' flight.id %}" class="btn btn-primary">Book Flight</a>
     </div>
     </div>
     </div>
@@ -238,17 +239,14 @@
     </div>
    </div>
    
-
-
-
-   
+  
     <!--FEATURE LIST-->
     <div class="container py-5 my-5">
         <div class="row">
 
             <div class="col-md-3 py-3 border-end border-1 border-danger">
                 <div class="d-flex align-items-start gap-3">
-                    <i class="bi bi-shield-check fs-2 text-success"></i>
+                    <i class="bi bi-shield-check  text-success" style="font-size: 1.5rem;"></i>
 
                     <div>
                         <h6 class="fw-bold mb-1">Safe & Reliable</h6>
@@ -261,7 +259,7 @@
             
             <div class="col-md-3 py-3 border-end border-1 border-danger">
                 <div class="d-flex align-items-start gap-3">
-                    <i class="bi bi-suitcase fs-1 text-success"></i>
+                    <i class="bi bi-luggage-fill text-success" style="font-size: 1.5rem;"></i>
 
                     <div>
                         <h6 class="fw-bold mb-1">Generous baggage</h6>
@@ -274,7 +272,7 @@
 
             <div class="col-md-3 py-3 border-end border-1 border-danger">
                 <div class="d-flex align-items-start gap-3">
-                    <i class="bi bi-fork-knife fs-1 text-success"></i>
+                    <i class="bi bi-fork-knife text-success" style="font-size: 1.5rem;"></i>
 
                     <div>
                         <h6 class="fw-bold mb-1">Delicious meals</h6>
@@ -287,7 +285,7 @@
 
             <div class="col-md-3 py-3">
                 <div class="d-flex align-items-start gap-3">
-                    <i class="bi bi-airplane fs-1 text-success"></i>
+                    <i class="bi bi-airplane text-success" style="font-size: 1.5rem;"></i>
 
                     <div>
                         <h6 class="fw-bold mb-1">Comfort First</h6>

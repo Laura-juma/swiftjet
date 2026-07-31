@@ -21,16 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 import os
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = " 2g$4w8)i%&9=u+0o%u3&4keye=vrh(s=i9^q9=p8)ou5-01!yn"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+DEBUG = True
 
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    ".onrender.com",
-]
+ALLOWED_HOSTS = []
+
 
 
 # Application definition

@@ -56,3 +56,9 @@ class Flight(models.Model):
 
   def __str__(self):
     return f"{self.flight_number} - {self.departure_destination} to {self.arrival_destination}"
+
+class Booking(models.Model):
+
+  flight = models.ForeignKey(Flight, on_delete=models.CASCADE, related_name="bookings")
+  seats = models.PositiveIntegerField(default=1)
+  seat_position = models.CharField(max_length=5)
