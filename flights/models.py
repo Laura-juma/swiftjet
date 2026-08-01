@@ -60,5 +60,24 @@ class Flight(models.Model):
 class Booking(models.Model):
 
   flight = models.ForeignKey(Flight, on_delete=models.CASCADE, related_name="bookings")
-  seats = models.PositiveIntegerField(default=1)
-  seat_position = models.CharField(max_length=5)
+
+class Seat(models.Model):
+  seat_number = models.CharField(max_length = 5)
+  flight = models.ForeignKey(
+    Flight,
+        on_delete=models.CASCADE,
+        related_name="seats"
+    )
+  booking = models.ForeignKey(
+        Booking,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="seats"
+    )
+  
+  class Meta:
+    unique_together = ("seat_number", "flight")
+
+  def __str__(self):
+    return f"Seat: {self.seat_number} on Flight: {self.flight.flight_number}"

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Flight, Destination, Booking
+from .models import Flight, Destination, Booking, Seat
 
 class SearchFlightForm(forms.Form):
 
@@ -30,19 +30,15 @@ class SearchFlightForm(forms.Form):
     )
 
 
-SEAT_CHOICES = [
-    ("1A", "1A"),
-    ("1B", "1B"),
-    ("1C", "1C"),
-    ("1D", "1D"),
-    ("2A", "2A"),
-    ("2B", "2B"),
-]
-
 
 
 class BookFlightForm(forms.Form):
- 
-
-    seats = forms.IntegerField(min_value=1)
-    seat_position = forms.ChoiceField(choices= SEAT_CHOICES)
+    seats = forms.IntegerField(
+        min_value=1,
+        label="Number of Seats")
+    
+    seat_position = forms.ModelMultipleChoiceField(
+        queryset = Seat.objects.none(),
+        widget = forms.CheckboxSelectMultiple,
+        label = "Seat Positions"
+    )

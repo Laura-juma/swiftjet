@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Review</title>
+</head>
+<body>
+  <h1>Booking ......</h1>
+  <p>Booking ID :{{booking.id}}</p>
+  <p>FLight : {{booking.flight.flight_number}}</p>
+  <p> Number of Seats : {{booking.seats.count}}</p>
+  <p>Selected Seat Positions : 
+    {% for seat in booking.seats.all%}
+      {{seat.seat_number}}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+  <p>Price : #</p>
+  <a href="#">
+    <button>Proceed To Payment</button>
+   </a>
+  <button><a href="{% url 'home' %}">Back to Home</a></button>
+  
+  
+</body>
+</html>
