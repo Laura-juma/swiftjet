@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
+    
 <head>
      <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +38,8 @@
         transform: translate(-50%, -50%);
     }
 }
-
+    
+  
 
   </style>
 
@@ -46,7 +48,7 @@
 <body>
    <div class="position-relative">
     <!--hero-->
-    <div class="hero position-relative mt-0">
+    <div class="hero position-relative mt-0 mb-5">
 
     <!-- Floating Navbar -->
     <nav class="custom-navbar navbar navbar-expand-md navbar-light bg-light shadow-sm rounded-pill position-absolute top-0 start-50 translate-middle-x w-75 mt-3 z-3 ">
@@ -87,16 +89,10 @@
         </div>
     </nav>
 
-    <div class="position-absolute  top-50 start-0 text-white z-3">
-        <p>FLY SMART, FLY SWIFT</p>
-        <P>Your Journey, Our Priority.</P>
-        <p>Experience comfort, reliabilty and world class service with SwiftJet</p>
-      
-    </div>
 
     
   
-
+   
     <!-- Carousel -->
     <div id="carouselExampleControls"
         class="carousel slide"
@@ -135,18 +131,17 @@
         </button>
 
     </div>
-
     </div>
 
     <!--Flight search-->
-    <div class="floating-form w-100 " >
-    <div class=" container bg-white my-5">
+    <div class="floating-form w-100" >
+    <div class=" container my-5">
+     <div class="bg-white shadow-lg rounded-4 p-3 overflow-hidden">
 
-
-    <div class="row  shadow-lg">
+    <div class="row">
 
         <div class="col-12">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs px-3 pt-3">
             <li class="nav-item">
                 <button class="nav-link active"
                         data-bs-toggle="tab"
@@ -165,11 +160,13 @@
         </ul>  
         </div>
 
-        <div class="tab-content">
+        <div class="tab-content ">
         <!--Flights form-->
         <div class="tab-pane fade show active" id="flights">
 
-        <form method="GET" class="row g-3 align-items-end">
+        <form method="GET"
+      action="{% url 'search_flights' %}"
+      class="row g-3 align-items-end">
 
         <div class="col-md-4 py-3">
             <label class="form-label">From</label>
@@ -193,52 +190,18 @@
         </div>
 
     </form>
-    </div>
+        </div>
     <!--Status-->
         <div class="tab-pane fade" id ="status">
             <p>Fetching Status ...</p>
         </div>
-    </div>
-    </div>
-
-    {% if request.GET %}
-
-    <h1 class="display-2 text-center my-5">Available Flights</h1>
-
-    {% for flight in flights %}
-
-
-    <div class="row">
-    <div class="col-lg-12 d-flex justify-content-center"">
-    <div class="card mb-3" style="width: 18rem;">
-        {% if flight.arrival_destination.image %}
-        <img src="{{ flight.arrival_destination.image.url }}"
-            class="card-img-top"
-            alt="{{ flight.arrival_destination.name }}">
-    {% endif %}
-        
-    <div class="card-body">
-        <h5 class="card-title">{{ flight.flight_number }}</h5>
-        <p class="card-text">{{ flight.departure_destination }} to {{ flight.arrival_destination }} <br> Departure: {{ flight.departure_time }} , Arrival: {{ flight.arrival_time }} {{flight.available_seats}} </p>
-        
-        <a href="{% url 'book' flight.id %}" class="btn btn-primary">Book Flight</a>
-    </div>
-    </div>
-    </div>
-    </div>
-
-
-    {% empty %}
-
-    <p class="text-center">No flights available</p>
-
-    {% endfor %}
-
-    {% endif %}
-    </div>
-    </div>
+    </div> <!-- tab-content -->
+   </div> <!-- row -->
+   </div> <!-- white box -->
+   </div> <!-- container -->
    </div>
-   
+   </div>
+ 
   
     <!--FEATURE LIST-->
     <div class="container py-5 my-5">
@@ -303,6 +266,150 @@
 
         </div>
     </div>
+    
+   
+    <!-- Popular Destinations -->
+<section class="py-5 bg-light">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Popular Destinations</h2>
+            <p class="text-muted">
+                Discover some of our most popular travel destinations.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <!-- Destination 1 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow h-100">
+
+                    <img src="{% static 'flights/images/nairobi.jpg' %}"
+                         class="card-img-top"
+                         style="height:220px; object-fit:cover;"
+                         alt="Nairobi">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title fw-bold">
+                            Nairobi
+                        </h5>
+
+                        <p class="card-text text-muted">
+                            Kenya's vibrant capital city known for wildlife,
+                            business and culture.
+                        </p>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0">
+                        <a href="#" class="btn btn-danger w-100 rounded-pill">
+                            Explore
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Destination 2 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow h-100">
+
+                    <img src="{% static 'flights/images/mombasa.jpg' %}"
+                         class="card-img-top"
+                         style="height:220px; object-fit:cover;"
+                         alt="Mombasa">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title fw-bold">
+                            Mombasa
+                        </h5>
+
+                        <p class="card-text text-muted">
+                            Relax on beautiful beaches and enjoy the rich
+                            Swahili culture.
+                        </p>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0">
+                        <a href="#" class="btn btn-danger w-100 rounded-pill">
+                            Explore
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Destination 3 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow h-100">
+
+                    <img src="{% static 'flights/images/kisumu.jpg' %}"
+                         class="card-img-top"
+                         style="height:220px; object-fit:cover;"
+                         alt="Kisumu">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title fw-bold">
+                            Kisumu
+                        </h5>
+
+                        <p class="card-text text-muted">
+                            Visit the beautiful shores of Lake Victoria and
+                            experience western Kenya.
+                        </p>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0">
+                        <a href="#" class="btn btn-danger w-100 rounded-pill">
+                            Explore
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Destination 4 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow h-100">
+
+                    <img src="{% static 'flights/images/eldoret.jpg' %}"
+                         class="card-img-top"
+                         style="height:220px; object-fit:cover;"
+                         alt="Eldoret">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title fw-bold">
+                            Eldoret
+                        </h5>
+
+                        <p class="card-text text-muted">
+                            Explore Kenya's city of champions and experience
+                            the beauty of the Rift Valley.
+                        </p>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-0">
+                        <a href="#" class="btn btn-danger w-100 rounded-pill">
+                            Explore
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+    
 
 
 <script src="{% static 'flights/js/bootstrap.bundle.min.js' %}"></script>

@@ -30,8 +30,6 @@ class SearchFlightForm(forms.Form):
     )
 
 
-
-
 class BookFlightForm(forms.Form):
     seats = forms.IntegerField(
         min_value=1,
@@ -42,3 +40,5 @@ class BookFlightForm(forms.Form):
         widget = forms.CheckboxSelectMultiple,
         label = "Seat Positions"
     )
+
+

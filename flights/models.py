@@ -39,7 +39,7 @@ class Flight(models.Model):
   )
   departure_time = models.DateTimeField()
   arrival_time = models.DateTimeField()
-  price = models.DecimalField(max_digits=10, decimal_places=2)
+  base_price = models.DecimalField(max_digits=10, decimal_places=2)
   available_seats = models.PositiveIntegerField()
 
   STATUS_CHOICES = [
@@ -60,8 +60,17 @@ class Flight(models.Model):
 class Booking(models.Model):
 
   flight = models.ForeignKey(Flight, on_delete=models.CASCADE, related_name="bookings")
+  total_seat_prices = models.DecimalField(max_digits=20, decimal_places = 2, default=0)
 
 class Seat(models.Model):
+  SEAT_CLASS_CHOICES =[
+    ("Economy", "Economy"),
+    ("Premium Economy", "Premium Economy"),
+    ("Business", "Business"),
+    ("First Class", "First Class"),
+
+  ]
+
   seat_number = models.CharField(max_length = 5)
   flight = models.ForeignKey(
     Flight,
@@ -75,6 +84,12 @@ class Seat(models.Model):
         blank=True,
         related_name="seats"
     )
+
+  seat_class=models.CharField(
+    max_length = 20,
+    choices = SEAT_CLASS_CHOICES,
+    default = "Economy"
+  )
   
   class Meta:
     unique_together = ("seat_number", "flight")

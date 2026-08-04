@@ -7,19 +7,25 @@
 </head>
 <body>
   <h1>Booking ......</h1>
+  <p>Please Review your trip details before proceeding</p>
+  <p>Flight Deatiles</p>
   <p>Booking ID :{{booking.id}}</p>
   <p>FLight : {{booking.flight.flight_number}}</p>
+  <p>From : {{booking.flight.departure_destination}}</p>
+  <p>At : {{booking.flight.departure_time}}</p>
+  <p>To : {{booking.flight.arrival_destination}}</p>
+  <p>At : {{booking.flight.departure_time}}</p>
   <p> Number of Seats : {{booking.seats.count}}</p>
   <p>Selected Seat Positions : 
     {% for seat in booking.seats.all%}
       {{seat.seat_number}}{% if not forloop.last %}, {% endif %}
     {% endfor %}
   </p>
-  <p>Price : #</p>
+  <p>Price Summary :${{booking.total_price}}</p>
   <a href="#">
     <button>Proceed To Payment</button>
    </a>
-  <button><a href="{% url 'home' %}">Back to Home</a></button>
+  <button><a href="{% url 'book' %}">Back to seats</a></button>
   
   
 </body>
