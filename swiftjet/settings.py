@@ -74,18 +74,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'swiftjet.wsgi.application'
 
 
+
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+
+import dj_database_url
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "swiftjet_db",
-        "USER": "root",
-        "PASSWORD": "laurajuma2509",
-        "HOST": "localhost",
-        "PORT": "3306",
-    }
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL")
+    )
 }
 
 
