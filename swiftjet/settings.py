@@ -79,6 +79,7 @@ WSGI_APPLICATION = 'swiftjet.wsgi.application'
 # Database
 
 import dj_database_url
+
 DATABASES = {
     "default": dj_database_url.config(
         default=os.getenv("DATABASE_URL"),
