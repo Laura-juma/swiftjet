@@ -62,6 +62,48 @@ class Booking(models.Model):
   flight = models.ForeignKey(Flight, on_delete=models.CASCADE, related_name="bookings")
   total_seat_prices = models.DecimalField(max_digits=20, decimal_places = 2, default=0)
 
+  PAYMENT_STATUS_CHOICES = [
+    ("PENDING", "Pending"),
+    ("SUCCESS", "Success"),
+    ("FAILED", "Failed"),
+   ]
+
+  payment_status = models.CharField(
+    max_length=20,
+    choices=PAYMENT_STATUS_CHOICES,
+    default="PENDING",
+   )
+
+  mpesa_receipt_number = models.CharField(
+    max_length=100,
+    blank=True,
+    null=True,
+   )
+
+  payment_transaction_date = models.CharField(
+    max_length=20,
+    blank=True,
+    null=True,
+   )
+
+  checkout_request_id = models.CharField(
+    max_length=100,
+    blank=True,
+    null=True,
+  )
+
+  merchant_request_id = models.CharField(
+      max_length=100,
+      blank=True,
+      null=True,
+  )
+
+  payment_phone = models.CharField(
+      max_length=20,
+      blank=True,
+      null=True,
+  )
+
 class Seat(models.Model):
   SEAT_CLASS_CHOICES =[
     ("Economy", "Economy"),

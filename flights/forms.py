@@ -29,16 +29,15 @@ class SearchFlightForm(forms.Form):
         required=False
     )
 
-
 class BookFlightForm(forms.Form):
     seats = forms.IntegerField(
         min_value=1,
         label="Number of Seats")
     
-    seat_position = forms.ModelMultipleChoiceField(
-        queryset = Seat.objects.none(),
-        widget = forms.CheckboxSelectMultiple,
-        label = "Seat Positions"
-    )
+#   seat_position = forms.ModelMultipleChoiceField(
+#       queryset = Seat.objects.none(),
+#       widget = forms.CheckboxSelectMultiple,
+#       label = "Seat Positions"
+#   )
 
 

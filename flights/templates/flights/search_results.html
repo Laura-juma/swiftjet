@@ -1,96 +1,637 @@
 {% load static %}
+
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search Results</title>
 
-  <link rel="stylesheet" href="{% static 'flights/css/bootstrap.min.css' %}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+```
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    .body {
-      font-family: 'Poppins', sans-serif;
-      }
-  </style>
+<title>Available Flights | SwiftJet</title>
+
+<!-- Bootstrap -->
+<link rel="stylesheet"
+      href="{% static 'flights/css/bootstrap.min.css' %}">
+
+<!-- Poppins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+
+<style>
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    /* Navbar */
+
+    .custom-navbar {
+        margin-top: 20px;
+    }
+
+    /* Page Header */
+
+    .results-header {
+        padding-top: 70px;
+        padding-bottom: 35px;
+    }
+
+    .results-header h1 {
+        font-weight: 700;
+    }
+
+    /* Search Summary */
+
+    .search-summary {
+        background-color: white;
+        border-radius: 18px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Flight Cards */
+
+    .flight-card {
+        border: none;
+        border-radius: 20px;
+        background-color: white;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .flight-number {
+        font-weight: 600;
+    }
+
+    .flight-time {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .airport-code {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .flight-line {
+        position: relative;
+        height: 2px;
+        background-color: #dee2e6;
+        flex-grow: 1;
+        margin: 0 15px;
+    }
+
+    .flight-line i {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 5px;
+        color: #198754;
+    }
+
+    .price {
+        font-size: 1.35rem;
+        font-weight: 700;
+    }
+
+    .select-btn {
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 500;
+    }
+
+    .status-badge {
+        border-radius: 50px;
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+
+    /* No Results */
+
+    .no-results {
+        background-color: white;
+        border-radius: 20px;
+        padding: 60px 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Footer */
+
+    .footer {
+        background-color: #212529;
+        color: white;
+    }
+
+    /* Mobile */
+
+    @media (max-width: 767.98px) {
+
+        .custom-navbar {
+            width: 95% !important;
+            border-radius: 0 !important;
+        }
+
+        .results-header {
+            padding-top: 45px;
+        }
+
+        .flight-time {
+            font-size: 1.2rem;
+        }
+
+    }
+
+</style>
+```
+
 </head>
+
 <body>
-    
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="custom-navbar navbar navbar-expand-md navbar-light bg-white shadow-sm rounded-pill mx-auto w-75">
+
+```
+<div class="container">
+
+    <a class="navbar-brand fw-bold fs-4"
+       href="{% url 'home' %}">
+
+        <img src="{% static 'flights/images/logo.png' %}"
+             alt="SwiftJet Logo"
+             width="40"
+             height="40"
+             class="d-inline-block align-text-top me-2">
+
+        <span class="text-success">Swift</span><span class="text-danger">Jet</span>
+
+    </a>
+
+
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarContent">
+
+        <span class="navbar-toggler-icon"></span>
+
+    </button>
+
+
+    <div class="collapse navbar-collapse"
+         id="navbarContent">
+
+        <ul class="navbar-nav ms-auto gap-4">
+
+            <li class="nav-item">
+
+                <a class="nav-link active"
+                   href="{% url 'home' %}">
+
+                    Book
+
+                </a>
+
+            </li>
+
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    Flights
+
+                </a>
+
+            </li>
+
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    About
+
+                </a>
+
+            </li>
+
+
+            <li class="nav-item">
+
+                <button class="btn btn-outline-danger rounded-pill">
+
+                    Sign Up
+
+                </button>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+```
+
+</nav>
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+```
+<!-- Page Heading -->
+
+<section class="results-header text-center">
+
+    <h1 class="display-6">
+
+        Available Flights
+
+    </h1>
+
+    <p class="text-muted">
+
+        Choose the flight that works best for your journey.
+
+    </p>
+
+</section>
+
+
+
+<!-- Search Summary -->
+
+<div class="search-summary p-4 mb-5 text-center">
+
+    <i class="bi bi-search text-success fs-3"></i>
+
+    <h5 class="fw-bold mt-2 mb-1">
+
+        Your Search Results
+
+    </h5>
+
+    <p class="text-muted mb-0">
+
+        Select a flight below to continue with your booking.
+
+    </p>
+
+</div>
+
+
 
 {% if flights %}
 
-<h1 class="display-2 text-center my-5">Available Flights</h1>
 
-{% for flight in flights %}
+    <!-- Number of Flights -->
 
-<div class="row">
-    <div class="col-lg-12 d-flex justify-content-center">
-        <div class="card mb-3" style="width: 18rem;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-            {% if flight.arrival_destination.image %}
-                <img src="{{ flight.arrival_destination.image.url }}"
-                     class="card-img-top"
-                     alt="{{ flight.arrival_destination.name }}">
-            {% endif %}
+        <h5 class="fw-bold mb-0">
 
-            <div class="card-body">
-                <h5 class="card-title">
-                    {{ flight.flight_number }}
-                </h5>
+            {{ flights|length }} Flight{{ flights|length|pluralize }}
 
-                <p class="card-text">
-                    {{ flight.departure_destination }} to
-                    {{ flight.arrival_destination }}
+        </h5>
 
-                    <br>
+        <span class="text-muted small">
 
-                    Departure:
-                    {{ flight.departure_time }}
+            Select a flight to continue
 
-                    <br>
+        </span>
 
-                    Arrival:
-                    {{ flight.arrival_time }}
+    </div>
 
-                    <br>
 
-                    Available Seats:
-                    {{ flight.available_seats }}
-                </p>
 
-                <a href="{% url 'book' flight.id %}"
-                   class="btn btn-primary">
-                    Book Flight
-                </a>
+    <!-- Flight List -->
+
+    {% for flight in flights %}
+
+
+        <div class="card flight-card mb-4">
+
+
+            <div class="card-body p-4">
+
+
+                <!-- Flight Header -->
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+
+                    <div>
+
+                        <span class="flight-number">
+
+                            <i class="bi bi-airplane text-success me-2"></i>
+
+                            {{ flight.flight_number }}
+
+                        </span>
+
+                        <small class="text-muted ms-2">
+
+                            {{ flight.aircraft.name }}
+
+                        </small>
+
+                    </div>
+
+
+                    {% if flight.status == "On Time" %}
+
+                        <span class="badge bg-success status-badge">
+
+                            {{ flight.status }}
+
+                        </span>
+
+                    {% elif flight.status == "Delayed" %}
+
+                        <span class="badge bg-warning text-dark status-badge">
+
+                            {{ flight.status }}
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-danger status-badge">
+
+                            {{ flight.status }}
+
+                        </span>
+
+                    {% endif %}
+
+
+                </div>
+
+
+
+                <!-- Route -->
+
+                <div class="row align-items-center">
+
+
+                    <!-- Departure -->
+
+                    <div class="col-4 text-center text-md-start">
+
+                        <div class="flight-time">
+
+                            {{ flight.departure_time|date:"H:i" }}
+
+                        </div>
+
+                        <div class="airport-code">
+
+                            {{ flight.departure_destination.airport_code }}
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ flight.departure_destination.city }}
+
+                        </small>
+
+                    </div>
+
+
+
+                    <!-- Flight Line -->
+
+                    <div class="col-4">
+
+                        <div class="text-center">
+
+                            <small class="text-muted">
+
+                                Direct
+
+                            </small>
+
+                        </div>
+
+                        <div class="flight-line">
+
+                            <i class="bi bi-airplane"></i>
+
+                        </div>
+
+                        <div class="text-center">
+
+                            <small class="text-muted">
+
+                                {{ flight.aircraft.name }}
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Arrival -->
+
+                    <div class="col-4 text-center text-md-end">
+
+                        <div class="flight-time">
+
+                            {{ flight.arrival_time|date:"H:i" }}
+
+                        </div>
+
+                        <div class="airport-code">
+
+                            {{ flight.arrival_destination.airport_code }}
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ flight.arrival_destination.city }}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+
+                <hr class="my-4">
+
+
+
+                <!-- Flight Details -->
+
+                <div class="row align-items-center">
+
+
+                    <div class="col-md-4">
+
+                        <small class="text-muted d-block">
+
+                            Available seats
+
+                        </small>
+
+                        <span class="fw-semibold">
+
+                            {{ flight.available_seats }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-md-4 mt-3 mt-md-0">
+
+                        <small class="text-muted d-block">
+
+                            Aircraft
+
+                        </small>
+
+                        <span class="fw-semibold">
+
+                            {{ flight.aircraft.name }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="col-md-4 mt-3 mt-md-0 text-md-end">
+
+                        <small class="text-muted d-block">
+
+                            Price
+
+                        </small>
+
+                        <span class="price text-danger">
+
+                            KSh {{ flight.base_price }}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Select Flight -->
+
+                <div class="text-end mt-4">
+
+                    <a href="{% url 'book' flight.id %}"
+                       class="btn btn-danger select-btn">
+
+                        Select Flight
+
+                        <i class="bi bi-arrow-right ms-2"></i>
+
+                    </a>
+
+                </div>
+
 
             </div>
 
         </div>
-    </div>
-</div>
 
-{% empty %}
 
-<div class="container py-5">
-    <h2 class="text-center">No flights available</h2>
-    <p class="text-center text-muted">
-        Try changing your departure, destination or travel date.
-    </p>
+    {% endfor %}
 
-    <div class="text-center mt-4">
-        <a href="{% url 'home' %}" class="btn btn-danger">
+
+{% else %}
+
+
+    <!-- No Flights -->
+
+    <div class="no-results text-center">
+
+        <i class="bi bi-airplane display-4 text-muted"></i>
+
+        <h4 class="fw-bold mt-4">
+
+            No flights found
+
+        </h4>
+
+        <p class="text-muted">
+
+            We couldn't find any flights matching your search.
+
+            Try changing your departure, destination or travel date.
+
+        </p>
+
+        <a href="{% url 'home' %}"
+           class="btn btn-danger rounded-pill px-4 mt-2">
+
+            <i class="bi bi-arrow-left me-2"></i>
+
             Search Again
-        </a>
-    </div>
-</div>
 
-{% endfor %}
+        </a>
+
+    </div>
 
 {% endif %}
+```
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer mt-5 py-4">
+
+```
+<div class="container text-center">
+
+    <p class="mb-1 fw-semibold">
+
+        <span class="text-success">Swift</span><span class="text-danger">Jet</span>
+
+    </p>
+
+    <small class="text-secondary">
+
+        Your journey, our priority.
+
+    </small>
+
+</div>
+```
+
+</footer>
+
 <script src="{% static 'flights/js/bootstrap.bundle.min.js' %}"></script>
+
 </body>
+
 </html>

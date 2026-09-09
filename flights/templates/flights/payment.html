@@ -1,0 +1,488 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Payment | SwiftJet</title>
+
+<!-- Bootstrap -->
+<link rel="stylesheet"
+      href="{% static 'flights/css/bootstrap.min.css' %}">
+
+<!-- Poppins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+
+<style>
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    /* Navbar */
+
+    .custom-navbar {
+        margin-top: 20px;
+    }
+
+    /* Page Header */
+
+    .payment-header {
+        padding-top: 70px;
+        padding-bottom: 35px;
+    }
+
+    .payment-header h1 {
+        font-weight: 700;
+    }
+
+    /* Payment Card */
+
+    .payment-card {
+        border: none;
+        border-radius: 22px;
+        background-color: white;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    /* Booking Summary */
+
+    .booking-summary {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+    }
+
+    .summary-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .summary-value {
+        font-weight: 600;
+    }
+
+    /* M-Pesa Section */
+
+    .mpesa-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 15px;
+        background-color: #e9f7ef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #198754;
+        font-size: 1.7rem;
+    }
+
+    /* Form */
+
+    .form-control {
+        border-radius: 12px;
+        padding: 12px 15px;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.15);
+        border-color: #198754;
+    }
+
+    /* Pay Button */
+
+    .pay-btn {
+        border-radius: 50px;
+        padding: 12px 30px;
+        font-weight: 600;
+    }
+
+    /* Back Button */
+
+    .back-btn {
+        border-radius: 50px;
+        padding: 11px 25px;
+    }
+
+    /* Security Note */
+
+    .security-note {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    /* Footer */
+
+    .footer {
+        background-color: #212529;
+        color: white;
+    }
+
+    /* Mobile */
+
+    @media (max-width: 767.98px) {
+
+        .custom-navbar {
+            width: 95% !important;
+            border-radius: 0 !important;
+        }
+
+        .payment-header {
+            padding-top: 45px;
+        }
+
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="custom-navbar navbar navbar-expand-md navbar-light bg-white shadow-sm rounded-pill mx-auto w-75">
+
+```
+<div class="container">
+
+    <a class="navbar-brand fw-bold fs-4"
+       href="{% url 'home' %}">
+
+        <img src="{% static 'flights/images/logo.png' %}"
+             alt="SwiftJet Logo"
+             width="40"
+             height="40"
+             class="d-inline-block align-text-top me-2">
+
+        <span class="text-success">Swift</span><span class="text-danger">Jet</span>
+
+    </a>
+
+
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarContent">
+
+        <span class="navbar-toggler-icon"></span>
+
+    </button>
+
+
+    <div class="collapse navbar-collapse"
+         id="navbarContent">
+
+        <ul class="navbar-nav ms-auto gap-4">
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="{% url 'home' %}">
+
+                    Book
+
+                </a>
+
+            </li>
+
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    Flights
+
+                </a>
+
+            </li>
+
+
+            <li class="nav-item">
+
+                <a class="nav-link"
+                   href="#">
+
+                    About
+
+                </a>
+
+            </li>
+
+
+            <li class="nav-item">
+
+                <button class="btn btn-outline-danger rounded-pill">
+
+                    Sign Up
+
+                </button>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+```
+
+</nav>
+
+<!-- ================= MAIN ================= -->
+
+<main class="container">
+
+```
+<!-- Page Heading -->
+
+<section class="payment-header text-center">
+
+    <i class="bi bi-credit-card text-success display-5"></i>
+
+    <h1 class="display-6 mt-3">
+
+        Complete Your Payment
+
+    </h1>
+
+    <p class="text-muted">
+
+        Enter your M-Pesa number to complete your booking.
+
+    </p>
+
+</section>
+
+
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-7 col-md-9">
+
+
+        <!-- ================= PAYMENT CARD ================= -->
+
+        <div class="card payment-card mb-5">
+
+            <div class="card-body p-4 p-md-5">
+
+
+                <!-- Booking Summary -->
+
+                <div class="booking-summary p-4 mb-4">
+
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                        <span class="summary-label">
+
+                            Booking
+
+                        </span>
+
+                        <span class="summary-value">
+
+                            #{{ booking.id }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <span class="summary-label">
+
+                            Total Amount
+
+                        </span>
+
+                        <span class="fw-bold text-danger fs-5">
+
+                            KSh {{ booking.total_seat_prices }}
+
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- M-Pesa -->
+
+                <div class="d-flex align-items-center gap-3 mb-4">
+
+                    <div class="mpesa-icon">
+
+                        <i class="bi bi-phone"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h5 class="fw-bold mb-1">
+
+                            Pay with M-Pesa
+
+                        </h5>
+
+                        <p class="text-muted small mb-0">
+
+                            You will receive an M-Pesa prompt on your phone.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Payment Form -->
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+
+                    <div class="mb-4">
+
+                        <label for="phone_number"
+                               class="form-label fw-semibold">
+
+                            M-Pesa Phone Number
+
+                        </label>
+
+
+                        <input type="text"
+                               name="phone_number"
+                               id="phone_number"
+                               class="form-control"
+                               placeholder="2547XXXXXXXX"
+                               required>
+
+
+                        <div class="form-text">
+
+                            Enter your Safaricom number in the format 2547XXXXXXXX.
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Pay Button -->
+
+                    <div class="d-grid">
+
+                        <button type="submit"
+                                class="btn btn-danger pay-btn">
+
+                            <i class="bi bi-lock-fill me-2"></i>
+
+                            Pay KSh {{ booking.total_seat_prices }}
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+
+
+                <!-- Security Note -->
+
+                <div class="text-center mt-4">
+
+                    <p class="security-note mb-0">
+
+                        <i class="bi bi-shield-check text-success me-1"></i>
+
+                        Your payment is processed securely through M-Pesa.
+
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Back -->
+
+        <div class="text-center mb-5">
+
+            <a href="{% url 'booking_review' booking.id %}"
+               class="btn btn-outline-secondary back-btn">
+
+                <i class="bi bi-arrow-left me-2"></i>
+
+                Back to Review
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+```
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer mt-5 py-4">
+
+```
+<div class="container text-center">
+
+    <p class="mb-1 fw-semibold">
+
+        <span class="text-success">Swift</span><span class="text-danger">Jet</span>
+
+    </p>
+
+    <small class="text-secondary">
+
+        Your journey, our priority.
+
+    </small>
+
+</div>
+```
+
+</footer>
+
+<script src="{% static 'flights/js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+
+</html>

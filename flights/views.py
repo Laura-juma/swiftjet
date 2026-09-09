@@ -3,7 +3,11 @@ from django.views import View
 from .models import Flight, Booking, Seat
 from .forms import SearchFlightForm, BookFlightForm
 from decimal import Decimal
-
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse,HttpResponse
+import json
+from .services.mpesa import process_callback, stk_push
 
 def home(request):
     form = SearchFlightForm()
@@ -43,7 +47,7 @@ class BookFlight(View):
            seat_price = flight.base_price * Decimal("1.5")
         elif seat.seat_class == "Business":
            seat_price = flight.base_price * Decimal("1.8")
-        elif seat.seat_class == "First class":
+        elif seat.seat_class == "First Class":
             seat_price = flight.base_price * Decimal("2.5")
         else:
            seat_price = flight.base_price
@@ -65,63 +69,46 @@ class BookFlight(View):
   def get(self, request, flight_id):
     flight = Flight.objects.get(id=flight_id)
     form = BookFlightForm()
-    form.fields["seat_position"].queryset = Seat.objects.filter(
-      flight = flight,
-      booking__isnull = True
-    )
-    return render(request, 'flights/book.html', {'form': form,
-                                                 "flight": flight})
 
+    return render(
+        request,
+        "flights/book.html",
+        {
+            "form": form,
+            "flight": flight
+        }
+    )
+    
   def post(self, request, flight_id):
     flight = Flight.objects.get(id=flight_id)
     form = BookFlightForm(request.POST)
-    form.fields["seat_position"].queryset = Seat.objects.filter(
-          flight = flight,
-          booking__isnull = True
-        )
 
     if form.is_valid():
         seats = form.cleaned_data["seats"]
-        seat_position = form.cleaned_data["seat_position"]
-
-        #Check if number of seats required is greater than available seats. If greater, show error message and render the form again
 
         if seats > flight.available_seats:
             form.add_error("seats", "Not enough available seats.")
             return render(request, "flights/book.html", {
-              "form": form,
-              "flight": flight,
-          })
+                "form": form,
+                "flight": flight,
+            })
 
-        #Check if number of seats selected is equal to the seat_positions selected, if not, show error message and render the form again
+        total_prices = flight.base_price * seats
 
-        if seat_position.count() != seats:
-          form.add_error("seat_position", "Please select the correct number of seats")
-
-          return render(request, "flights/book.html", {
-              "form": form,
-              "flight": flight,
-          })
-
-        #calculating each seat price
-        seat_prices, total_prices =self.calculate_price(flight, seat_position)
-
-        #creating the book object
-        booking = Booking.objects.create(flight=flight, total_seat_prices = total_prices)
-
-        #updating the seat objects to include the specific booking object
-        for seat in seat_position :
-          seat.booking = booking
-          seat.save()
-        
-        
+        booking = Booking.objects.create(
+            flight=flight,
+            total_seat_prices=total_prices
+        )
 
         self.update_remaining_seats(flight, seats)
 
- 
-        return redirect("booking_review",
-                        booking_id = booking.id)
+        return redirect("booking_review", booking_id=booking.id)
 
+    return render(request, "flights/book.html", {
+        "form": form,
+        "flight": flight,
+    })
+  
 class BookingReview(View):
     
 
@@ -138,9 +125,69 @@ class BookingReview(View):
         )
 
 
+def PaymentView(request, booking_id):
 
+    booking = Booking.objects.get(id=booking_id)
 
+    if request.method == "GET":
 
-      
-        
+        return render(
+            request,
+            "flights/payment.html",
+            {
+                "booking": booking
+            }
+        )
 
+    elif request.method == "POST":
+
+        phone_number = request.POST.get("phone_number")
+
+        try:
+            response = stk_push(
+                phone_number=phone_number,
+                amount=int(booking.total_seat_prices),
+                account_reference=f"Booking-{booking.id}",
+                transaction_desc="SwiftJet Flight Booking",
+            )
+
+            booking.checkout_request_id = response["CheckoutRequestID"]
+            booking.merchant_request_id = response["MerchantRequestID"]
+            booking.save()
+
+            return HttpResponse(
+                "STK Push sent successfully. Please complete the payment on your phone."
+            )
+
+        except Exception as e:
+           return HttpResponse(str(e), status=500)
+           
+
+@csrf_exempt
+@require_POST
+def mpesa_callback(request):
+    # Safaricom initiates a NEW HTTP request to this view. It would have been a response but it cant because the other conversation ended (stk_push) so only way is by sending a request  to start a conversation to tell us how the payment went. remember the stk_push response only tells us that our request has been recieved nothing about the user's payment.
+    # after it finishes processing the customer's payment.
+
+    # The payment result (success, cancelled, timeout, etc.)
+    # will be sent inside request.body as JSON.
+
+    # For now, we are not processing that data yet.
+    # We first want to confirm that Safaricom can successfully
+    # reach this endpoint.
+
+    # Every HTTP request expects an HTTP response.
+    # We return this JSON to acknowledge that we received
+    # Safaricom's callback.
+   data = json.loads(request.body)
+
+   callback = data["Body"]["stkCallback"]
+
+   process_callback(callback)
+
+   print(data)
+
+   return JsonResponse({
+      "ResultCode" : 0,
+      "ResultDesc" : "Accepted"
+   })
