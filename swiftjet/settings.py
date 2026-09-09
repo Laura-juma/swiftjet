@@ -75,15 +75,17 @@ WSGI_APPLICATION = 'swiftjet.wsgi.application'
 
 
 
+
 # Database
 
 import dj_database_url
-
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL")
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=0,
     )
 }
+
 
 
 # Password validation
