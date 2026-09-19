@@ -80,14 +80,30 @@ WSGI_APPLICATION = 'swiftjet.wsgi.application'
 
 import dj_database_url
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=0,
-    )
-}
+if os.getenv("DATABASE_URL"):
+    # Render / production
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.getenv("DATABASE_URL"),
+            conn_max_age=0,
+        )
+    }
+else:
+    # Local development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": "swiftjet_db",
+            "USER": "root",
+            "PASSWORD": "laurajuma2509",
+            "HOST": "localhost",
+            "PORT": "3306",
+        }
+    }
 
 DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
+
+
 
 
 

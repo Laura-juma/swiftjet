@@ -138,3 +138,4 @@ class Seat(models.Model):
 
   def __str__(self):
     return f"Seat: {self.seat_number} on Flight: {self.flight.flight_number}"
+

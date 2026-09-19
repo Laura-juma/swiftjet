@@ -112,10 +112,10 @@ def process_callback(callback):
     result_desc = callback["ResultDesc"]
 
     booking = Booking.objects.get(
-        checkout_request_id=checkout_request_id
+        checkout_request_id=checkout_request_id, merchant_request_id=merchant_request_id
     )
 
-    booking.merchant_request_id = merchant_request_id
+    
 
     if result_code != 0:
 
@@ -127,6 +127,7 @@ def process_callback(callback):
     metadata = callback["CallbackMetadata"]["Item"]
 
     amount = get_metadata_value(metadata, "Amount")
+    
     receipt_number = get_metadata_value(
         metadata,
         "MpesaReceiptNumber"

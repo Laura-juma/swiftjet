@@ -1,0 +1,180 @@
+<!-- Seat Selection -->
+
+<div class="mt-5">
+
+    <div class="mb-4">
+        <h5 class="fw-bold mb-1">Select Your Seats</h5>
+        <p class="text-muted small mb-0">
+            Choose your preferred seats for this flight.
+        </p>
+    </div>
+
+
+    <!-- Seat Map -->
+    <div class="text-center">
+
+        <!-- Front of aircraft -->
+        <div class="mb-4">
+            <i class="bi bi-airplane-fill text-success fs-3"></i>
+
+            <div class="small text-muted mt-1">
+                Front
+            </div>
+        </div>
+
+
+        <!-- Seats -->
+
+        <div class="d-flex flex-column align-items-center gap-2">
+
+            {% regroup seats by seat_number.0 as seat_rows %}
+
+            {% for row in seat_rows %}
+
+                <div class="d-flex align-items-center gap-2">
+
+                    {% for seat in row.list %}
+
+                        <button
+                            type="button"
+                            class="seat-btn"
+                        >
+                            {{ seat.seat_number }}
+                        </button>
+
+                        <!-- Create aisle after B -->
+                        {% if seat.seat_number|slice:"-1:" == "B" %}
+                            <div class="aisle"></div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+
+            {% empty %}
+
+                <p class="text-muted">
+                    No seats available for this flight.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Legend -->
+
+        <div class="d-flex justify-content-center flex-wrap gap-4 mt-4">
+
+            <div class="small">
+                <span class="legend-seat available"></span>
+                Available
+            </div>
+
+            <div class="small">
+                <span class="legend-seat selected"></span>
+                Selected
+            </div>
+
+            <div class="small">
+                <span class="legend-seat occupied"></span>
+                Occupied
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+    /* Seat button */
+
+    .seat-btn {
+        width: 48px;
+        height: 42px;
+
+        border: 2px solid #198754;
+        border-radius: 8px;
+
+        background-color: white;
+        color: #198754;
+
+        font-size: 12px;
+        font-weight: 600;
+
+        box-shadow: 0 4px 0 #146c43;
+
+        transition: all 0.15s ease;
+    }
+
+
+    /* Seat hover */
+
+    .seat-btn:hover {
+        background-color: #198754;
+        color: white;
+
+        transform: translateY(-2px);
+
+        box-shadow: 0 6px 0 #146c43;
+    }
+
+
+    /* Seat click */
+
+    .seat-btn:active {
+        transform: translateY(2px);
+
+        box-shadow: 0 2px 0 #146c43;
+    }
+
+
+    /* Space between the two sides of the aircraft */
+
+    .aisle {
+        width: 25px;
+    }
+
+
+    /* Legend */
+
+    .legend-seat {
+        display: inline-block;
+
+        width: 14px;
+        height: 14px;
+
+        border-radius: 4px;
+
+        margin-right: 5px;
+
+        vertical-align: -2px;
+    }
+
+
+    /* Available */
+
+    .legend-seat.available {
+        background-color: white;
+
+        border: 2px solid #198754;
+    }
+
+
+    /* Selected */
+
+    .legend-seat.selected {
+        background-color: #dc3545;
+    }
+
+
+    /* Occupied */
+
+    .legend-seat.occupied {
+        background-color: #6c757d;
+    }
+
+</style>

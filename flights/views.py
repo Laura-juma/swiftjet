@@ -75,7 +75,8 @@ class BookFlight(View):
         "flights/book.html",
         {
             "form": form,
-            "flight": flight
+            "flight": flight,
+            "seats" : flight.seats.all()
         }
     )
     
@@ -124,7 +125,6 @@ class BookingReview(View):
             }
         )
 
-
 def PaymentView(request, booking_id):
 
     booking = Booking.objects.get(id=booking_id)
@@ -155,14 +155,16 @@ def PaymentView(request, booking_id):
             booking.merchant_request_id = response["MerchantRequestID"]
             booking.save()
 
-            return HttpResponse(
-                "STK Push sent successfully. Please complete the payment on your phone."
+            return render(request, "flights/payment.html", {
+               "booking" : booking,
+              
+            }
+                
             )
 
         except Exception as e:
            return HttpResponse(str(e), status=500)
            
-
 @csrf_exempt
 @require_POST
 def mpesa_callback(request):
@@ -172,9 +174,7 @@ def mpesa_callback(request):
     # The payment result (success, cancelled, timeout, etc.)
     # will be sent inside request.body as JSON.
 
-    # For now, we are not processing that data yet.
-    # We first want to confirm that Safaricom can successfully
-    # reach this endpoint.
+    
 
     # Every HTTP request expects an HTTP response.
     # We return this JSON to acknowledge that we received
@@ -190,4 +190,11 @@ def mpesa_callback(request):
    return JsonResponse({
       "ResultCode" : 0,
       "ResultDesc" : "Accepted"
+   })
+
+def payment_status(request, booking_id):
+   booking = Booking.objects.get(id=booking_id)
+
+   return JsonResponse({
+      "status" : booking.payment_status
    })
