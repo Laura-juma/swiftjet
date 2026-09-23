@@ -231,8 +231,194 @@ def payment_status(request, booking_id):
       "status" : booking.payment_status
    })
 
-
+#TESTING
 def database_test(request):
     return JsonResponse({
         "flights": Flight.objects.count(),
+    })
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import JsonResponse
+from django.utils import timezone
+from datetime import timedelta
+
+from .models import Aircraft, Destination, Flight
+
+
+@staff_member_required
+def setup_production(request):
+
+    if request.method != "POST":
+        return JsonResponse({
+            "error": "POST request required."
+        }, status=405)
+
+    # Aircraft
+    falcon = Aircraft.objects.create(
+        name="SwiftJet Falcon",
+        model="Boeing 737-800",
+        capacity=189
+    )
+
+    eagle = Aircraft.objects.create(
+        name="SwiftJet Eagle",
+        model="Boeing 787-8 Dreamliner",
+        capacity=234
+    )
+
+    horizon = Aircraft.objects.create(
+        name="SwiftJet Horizon",
+        model="Embraer E190",
+        capacity=96
+    )
+
+    # Destinations
+    nairobi = Destination.objects.create(
+        city="Nairobi",
+        country="Kenya",
+        description="Kenya's vibrant capital city.",
+        airport_code="NBO"
+    )
+
+    mombasa = Destination.objects.create(
+        city="Mombasa",
+        country="Kenya",
+        description="A beautiful coastal city known for its beaches and Swahili culture.",
+        airport_code="MBA"
+    )
+
+    kisumu = Destination.objects.create(
+        city="Kisumu",
+        country="Kenya",
+        description="A lakeside city on the shores of Lake Victoria.",
+        airport_code="KIS"
+    )
+
+    eldoret = Destination.objects.create(
+        city="Eldoret",
+        country="Kenya",
+        description="A city in Kenya's Rift Valley known as the City of Champions.",
+        airport_code="EDL"
+    )
+
+    dubai = Destination.objects.create(
+        city="Dubai",
+        country="UAE",
+        description="A major international destination known for its modern architecture and attractions.",
+        airport_code="DXB"
+    )
+
+    london = Destination.objects.create(
+        city="London",
+        country="United Kingdom",
+        description="A major international city and global travel destination.",
+        airport_code="LHR"
+    )
+
+    # Flights
+    flights = [
+        {
+            "flight_number": "SJ101",
+            "aircraft": falcon,
+            "departure_destination": nairobi,
+            "arrival_destination": mombasa,
+            "base_price": 6500,
+        },
+        {
+            "flight_number": "SJ102",
+            "aircraft": falcon,
+            "departure_destination": mombasa,
+            "arrival_destination": nairobi,
+            "base_price": 6500,
+        },
+        {
+            "flight_number": "SJ201",
+            "aircraft": eagle,
+            "departure_destination": nairobi,
+            "arrival_destination": dubai,
+            "base_price": 45000,
+        },
+        {
+            "flight_number": "SJ301",
+            "aircraft": eagle,
+            "departure_destination": nairobi,
+            "arrival_destination": london,
+            "base_price": 82000,
+        },
+        {
+            "flight_number": "SJ401",
+            "aircraft": horizon,
+            "departure_destination": nairobi,
+            "arrival_destination": kisumu,
+            "base_price": 5000,
+        },
+        {
+            "flight_number": "SJ402",
+            "aircraft": horizon,
+            "departure_destination": nairobi,
+            "arrival_destination": eldoret,
+            "base_price": 4800,
+        },
+        {
+            "flight_number": "SJ404",
+            "aircraft": eagle,
+            "departure_destination": nairobi,
+            "arrival_destination": london,
+            "base_price": 89000,
+        },
+    ]
+
+    for flight_data in flights:
+        Flight.objects.create(
+            **flight_data,
+            departure_time=timezone.now() + timedelta(days=7),
+            arrival_time=timezone.now() + timedelta(days=7, hours=2),
+            available_seats=flight_data["aircraft"].capacity,
+            total_seats=flight_data["aircraft"].capacity,
+            status="On Time"
+        )
+
+    return JsonResponse({
+        "success": True,
+        "message": "Production database populated successfully."
+    })
+
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+
+
+import os
+
+
+def create_production_superuser(request):
+    if request.method != "POST":
+        return JsonResponse({
+            "error": "POST request required."
+        }, status=405)
+
+    secret = request.POST.get("secret")
+
+    if secret != os.environ.get("PRODUCTION_SETUP_SECRET"):
+        return JsonResponse({
+            "error": "Invalid secret."
+        }, status=403)
+
+    username = os.environ.get("PRODUCTION_ADMIN_USERNAME")
+    email = os.environ.get("PRODUCTION_ADMIN_EMAIL")
+    password = os.environ.get("PRODUCTION_ADMIN_PASSWORD")
+
+    if User.objects.filter(username=username).exists():
+        return JsonResponse({
+            "message": "Superuser already exists."
+        })
+
+    User.objects.create_superuser(
+        username=username,
+        email=email,
+        password=password
+    )
+
+    return JsonResponse({
+        "success": True,
+        "message": "Production superuser created."
     })
