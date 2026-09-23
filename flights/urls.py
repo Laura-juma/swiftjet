@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, BookFlight, BookingReview, search_flights, PaymentView, mpesa_callback, payment_status, database_test, setup_production, create_production_superuser
+from .views import home, BookFlight, BookingReview, search_flights, PaymentView, mpesa_callback, payment_status, database_test, setup_production
 
 urlpatterns = [
     path("", home, name="home"),
@@ -18,11 +18,7 @@ urlpatterns = [
     setup_production,
     name="setup_production"
 ),
-path(
-    "create-production-superuser/",
-    create_production_superuser,
-    name="create_production_superuser"
-),
+
 
 ]
 

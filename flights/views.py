@@ -390,36 +390,3 @@ def setup_production(request):
 
 
 
-@csrf_exempt
-def create_production_superuser(request):
-    if request.method != "POST":
-        return JsonResponse({
-            "error": "POST request required."
-        }, status=405)
-
-    secret = request.POST.get("secret")
-
-    if secret != os.environ.get("PRODUCTION_SETUP_SECRET"):
-        return JsonResponse({
-            "error": "Invalid secret."
-        }, status=403)
-
-    username = os.environ.get("PRODUCTION_ADMIN_USERNAME")
-    email = os.environ.get("PRODUCTION_ADMIN_EMAIL")
-    password = os.environ.get("PRODUCTION_ADMIN_PASSWORD")
-
-    if User.objects.filter(username=username).exists():
-        return JsonResponse({
-            "message": "Superuser already exists."
-        })
-
-    User.objects.create_superuser(
-        username=username,
-        email=email,
-        password=password
-    )
-
-    return JsonResponse({
-        "success": True,
-        "message": "Production superuser created."
-    })
