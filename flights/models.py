@@ -41,6 +41,7 @@ class Flight(models.Model):
   arrival_time = models.DateTimeField()
   base_price = models.DecimalField(max_digits=10, decimal_places=2)
   available_seats = models.PositiveIntegerField()
+  total_seats = models.PositiveIntegerField()
 
   STATUS_CHOICES = [
       ("On Time", "On Time"),
@@ -56,6 +57,7 @@ class Flight(models.Model):
 
   def __str__(self):
     return f"{self.flight_number} - {self.departure_destination} to {self.arrival_destination}"
+
 
 class Booking(models.Model):
 

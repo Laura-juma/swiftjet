@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse,HttpResponse
 import json
 from .services.mpesa import process_callback, stk_push
+from django.urls import reverse
 
 def home(request):
     form = SearchFlightForm()
@@ -70,49 +71,79 @@ class BookFlight(View):
     flight = Flight.objects.get(id=flight_id)
     form = BookFlightForm()
 
+    seats = flight.seats.all()
+
+    for seat in seats:
+     seat.row_number = int(seat.seat_number[:-1])
+
     return render(
         request,
         "flights/book.html",
         {
             "form": form,
             "flight": flight,
-            "seats" : flight.seats.all()
+            "seats" : seats
         }
     )
     
-  def post(self, request, flight_id):
+def post(self, request, flight_id):
     flight = Flight.objects.get(id=flight_id)
-    form = BookFlightForm(request.POST)
 
-    if form.is_valid():
-        seats = form.cleaned_data["seats"]
+    # Get selected seats from JavaScript
+    selected_seats = json.loads(request.body)["seats"]
 
-        if seats > flight.available_seats:
-            form.add_error("seats", "Not enough available seats.")
-            return render(request, "flights/book.html", {
-                "form": form,
-                "flight": flight,
-            })
+    if len(selected_seats) > flight.available_seats:
+        return JsonResponse({
+            "success": False,
+            "message": "Not enough seats available."
+        })
 
-        total_prices = flight.base_price * seats
-
-        booking = Booking.objects.create(
-            flight=flight,
-            total_seat_prices=total_prices
+    # Check whether the selected seats are already booked
+    for seat in selected_seats:
+        specific_seat = Seat.objects.get(
+            seat_number=seat,
+            flight=flight
         )
 
-        self.update_remaining_seats(flight, seats)
+        if specific_seat.booking:
+            return JsonResponse({
+                "success": False,
+                "message": "Seat is already booked"
+            })
 
-        return redirect("booking_review", booking_id=booking.id)
+    # All seats are available, so create ONE booking
+    booking = Booking.objects.create(flight=flight)
 
-    return render(request, "flights/book.html", {
-        "form": form,
-        "flight": flight,
-    })
-  
-class BookingReview(View):
+    # Assign all selected seats to the booking
+    for seat in selected_seats:
+        specific_seat = Seat.objects.get(
+            seat_number=seat,
+            flight=flight
+        )
+
+        specific_seat.booking = booking
+        specific_seat.save()
+
+    # Calculate seat price
+    base_price = flight.base_price
+    total_prices = base_price * len(selected_seats)
+    booking.total_seat_prices = total_prices
+    booking.save()
+
+    #updating available seats
+    flight.available_seats -= len(selected_seats)
+    flight.save()
     
 
+    return JsonResponse({
+        "success": True,
+        "redirect_url": reverse(
+            "booking_review",
+            args=[booking.id]
+        )
+    })
+  
+class BookingReview(View): 
     def get(self, request, booking_id):
 
         booking = Booking.objects.get(id=booking_id)
@@ -179,6 +210,7 @@ def mpesa_callback(request):
     # Every HTTP request expects an HTTP response.
     # We return this JSON to acknowledge that we received
     # Safaricom's callback.
+   print("🔥🔥🔥 MPESA CALLBACK RECEIVED 🔥🔥🔥")
    data = json.loads(request.body)
 
    callback = data["Body"]["stkCallback"]
@@ -198,3 +230,9 @@ def payment_status(request, booking_id):
    return JsonResponse({
       "status" : booking.payment_status
    })
+
+
+def database_test(request):
+    return JsonResponse({
+        "flights": Flight.objects.count(),
+    })

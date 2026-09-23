@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, BookFlight, BookingReview, search_flights, PaymentView, mpesa_callback, payment_status
+from .views import home, BookFlight, BookingReview, search_flights, PaymentView, mpesa_callback, payment_status, database_test
 
 urlpatterns = [
     path("", home, name="home"),
@@ -9,7 +9,8 @@ urlpatterns = [
     path("payment/<int:booking_id>/", PaymentView, name="payment"),
     path("mpesa/callback/", mpesa_callback, name="mpesa_callback"),
     path("payment-status/<int:booking_id>/", payment_status, name="payment_status"),
-]
+    path("database-test/", database_test, name="database_test"),
 
+]
 
 

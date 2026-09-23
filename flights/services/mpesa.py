@@ -104,6 +104,7 @@ def stk_push(phone_number, amount, account_reference, transaction_desc):
    except requests.exceptions.RequestException as e:
       raise Exception (f"STK Push Request failed: {e}") from e        
 
+
 def process_callback(callback):
 
     checkout_request_id = callback["CheckoutRequestID"]

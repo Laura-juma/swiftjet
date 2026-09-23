@@ -1,4 +1,3 @@
-<!-- Seat Selection -->
 
 <div class="mt-5">
 
@@ -8,7 +7,8 @@
             Choose your preferred seats for this flight.
         </p>
     </div>
-
+    
+    <div id="seat-error" class="text-danger small mt-3"></div>
 
     <!-- Seat Map -->
     <div class="text-center">
@@ -27,7 +27,7 @@
 
         <div class="d-flex flex-column align-items-center gap-2">
 
-            {% regroup seats by seat_number.0 as seat_rows %}
+            {% regroup seats by row_number as seat_rows %}
 
             {% for row in seat_rows %}
 
@@ -35,9 +35,13 @@
 
                     {% for seat in row.list %}
 
+                       
+
                         <button
                             type="button"
                             class="seat-btn"
+                            data-seat = "{{seat.seat_number}}"
+                            data-booked = "{% if seat.booking %}true{% else %}false{% endif %}"
                         >
                             {{ seat.seat_number }}
                         </button>
@@ -178,3 +182,99 @@
     }
 
 </style>
+
+<script>
+
+    const seatButtons = document.querySelectorAll(".seat-btn");
+    const bookingForm = document.getElementById("booking-form");
+    const selectedSeats = [];
+
+    function seatSelection() {    
+
+        seatButtons.forEach(function(seatButton) {
+            
+
+            if (seatButton.dataset.booked === "true") {
+                seatButton.style.backgroundColor = "grey";
+            }
+
+
+            seatButton.addEventListener("click", function(e) {
+                const booked = e.target.dataset.booked;              
+                const seatNumber = e.target.dataset.seat;
+                const numberOfSeatsInput = document.getElementById("id_seats").value;
+                const numberOfSeats = Number(numberOfSeatsInput);
+                const seatError = document.getElementById("seat-error");
+
+                if (booked === "true") {
+                    return;
+                }
+               
+                if (selectedSeats.includes(seatNumber)) {
+
+                    const specificSeat = selectedSeats.indexOf(seatNumber);
+
+                    selectedSeats.splice(specificSeat, 1);
+
+                    e.target.style.backgroundColor = "white";
+
+                } else {
+
+                    e.target.style.backgroundColor = "#dc3545";
+
+                    selectedSeats.push(seatNumber);
+
+                }
+
+                if (selectedSeats.length === numberOfSeats) {
+
+                    seatError.textContent = "";
+
+                   
+
+                } else {
+
+                    seatError.textContent =
+                        "Please select the correct number of seats.";
+
+                }
+
+            });
+
+        });
+
+    }
+    
+    bookingForm.addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+          const response =  await fetch("{% url 'book' flight.id %}", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}"
+                        },
+
+                        body: JSON.stringify({
+                            seats: selectedSeats
+                        })
+
+                    });
+         console.log("STATUS:", response.status);
+
+         const data  =await response.json();
+
+         if(data.success) {
+            window.location.href = data.redirect_url
+         }
+         else {
+            alert(data.message)
+         };
+
+        });                           
+
+    seatSelection();
+
+</script>
