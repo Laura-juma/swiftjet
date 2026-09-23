@@ -91,7 +91,7 @@ class BookFlight(View):
         }
     )
     
-def post(self, request, flight_id):
+  def post(self, request, flight_id):
     flight = Flight.objects.get(id=flight_id)
 
     # Get selected seats from JavaScript
