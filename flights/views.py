@@ -9,6 +9,11 @@ from django.http import JsonResponse,HttpResponse
 import json
 from .services.mpesa import process_callback, stk_push
 from django.urls import reverse
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+
+
+import os
 
 def home(request):
     form = SearchFlightForm()
@@ -383,13 +388,9 @@ def setup_production(request):
         "message": "Production database populated successfully."
     })
 
-from django.http import JsonResponse
-from django.contrib.auth.models import User
 
 
-import os
-
-
+@csrf_exempt
 def create_production_superuser(request):
     if request.method != "POST":
         return JsonResponse({
